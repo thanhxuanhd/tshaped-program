@@ -1,0 +1,5 @@
+export const APP_URL = 'https://demoqa.com'
+export const ACCOUNT_LOGIN = '/Account/v1/Login'
+export const ACCOUNT_GENERATE_TOKEN = '/Account/v1/GenerateToken'
+export const ACCOUNT_DETAIL = '/Account/v1/User'
+export const GET_BOOK = '/BookStore/v1/Books'

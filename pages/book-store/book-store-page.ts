@@ -1,7 +1,6 @@
 import { Locator, type Page, expect } from "@playwright/test";
 export class BookStorePage {
     constructor(private page: Page) {
-
     }
     
     async navigateToBooks() {
