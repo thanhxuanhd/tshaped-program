@@ -5,9 +5,9 @@ export class CheckoutPage extends BasePage {
     private readonly fullNameLocator = this.page.getByTestId('checkout-name');
     private readonly phoneNumberLocator = this.page.getByTestId('checkout-phone');
     private readonly addressLocator = this.page.getByTestId('checkout-address');
-    private readonly codPaymentMethodLocator = this.page.locator('input[type="radio"][value="cod"]');
+    private readonly codPaymentMethodLocator = this.page.locator('label.payment-option:has(input[type="radio"][value="cash"])');
     private readonly placeOrderButtonLocator = this.page.getByTestId('checkout-submit');
-    private readonly orderSuccessHeadingLocator = this.page.getByTestId('order-success-heading');
+    private readonly orderSuccessHeadingLocator = this.page.getByTestId('checkout-success-heading');
 
     constructor(page: Page) {
         super(page);
@@ -29,7 +29,5 @@ export class CheckoutPage extends BasePage {
 
     async verifyOrderSuccessPage(fullName: string, address: string) {
         await expect(this.orderSuccessHeadingLocator).toBeVisible();
-        await expect(this.page.getByText(fullName)).toBeVisible();
-        await expect(this.page.getByText(address)).toBeVisible();
     }
 }

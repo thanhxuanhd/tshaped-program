@@ -1,5 +1,5 @@
 import { API_ENDPOINTS, ApiHelper } from "../api";
-import type { ILoginResponse, IOrder, IProduct } from '../models';
+import type { ICartItem, ILoginResponse, IOrder, IOrderDeleteFilter, IProduct } from '../models';
 import type { APIRequestContext } from '@playwright/test';
 
 export class PrepareDataService {
@@ -29,42 +29,70 @@ export class PrepareDataService {
         this.userFullName = loginResponse.user.name;
     }
 
-    async createOrder(orderData: IOrder, token: string): Promise<any> {
+    async createOrder(orderData: IOrder): Promise<any> {
         const response = await this.apiHelper.post(API_ENDPOINTS.ORDERS, {
             data: orderData,
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${this.apiToken}`,
             }
         });
         return response.json();
     }
 
-    async getProducts(token: string): Promise<IProduct[]> {
+    async cleanupOrder(filter: IOrderDeleteFilter): Promise<any> {
+        const response = await this.apiHelper.delete(API_ENDPOINTS.ORDERS, {
+            params: {
+                ...(filter.search && { search: filter.search }),
+                ...(filter.status && { status: filter.status }),
+                ...(filter.paymentMethod && { paymentMethod: filter.paymentMethod }),
+            },
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${this.apiToken}`,
+            }
+        });
+        return response.json();
+    }
+
+    async getProducts(): Promise<IProduct[]> {
         const response = await this.apiHelper.get(`${API_ENDPOINTS.PRODUCTS}`, {
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${this.apiToken}`,
             }
         });
-        return response.json(); 
+        return response.json();
     }
 
     async findProduct(productName: string): Promise<IProduct | undefined> {
-        const products = await this.getProducts(this.apiToken);
+        const products = await this.getProducts();
         return products.find(product => product.name === productName);
     }
 
-    async cleanupUserData(): Promise<void> {
-        await this.updateUserFullName(this.apiToken, this.userFullName, this.userId);
+    async cleanupUserData(filter?: IOrderDeleteFilter): Promise<void> {
+        await this.cleanupCart([]);
+        await this.cleanupOrder(filter || {});
+        await this.updateUserFullName(this.userFullName, this.userId);
     }
 
-    async updateUserFullName(token: string, newFullName: string, userId: string): Promise<any> {
-        const response = await this.apiHelper.patch(`${API_ENDPOINTS.USERS}/${userId}`, {
+    async updateUserFullName(newFullName: string, userId: string): Promise<any> {
+        const response = await this.apiHelper.patch(`${API_ENDPOINTS.PROFILE}`, {
             data: { name: newFullName },
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${this.apiToken}`,
+            }
+        });
+        return response.json();
+    }
+
+    async cleanupCart(items: ICartItem[]): Promise<any> {
+        const response = await this.apiHelper.put(API_ENDPOINTS.CART, {
+            data: { items },
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${this.apiToken}`,
             }
         });
         return response.json();

@@ -15,7 +15,7 @@ test.describe('Login Page Tests', () => {
         });
     });
 
-    test('Verify login with empty credentials', async ({ loginPage }) => {
+    test('Test case 1: Verify login with empty credentials', { tag: '@mandatory' }, async ({ loginPage }) => {
         await allure.step('Login with empty credentials', async () => {
             await loginPage.doLogin(account.username, account.password);
         });

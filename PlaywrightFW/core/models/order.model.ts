@@ -1,4 +1,9 @@
+export type OrderStatus = 'pending' | 'confirmed' | 'shipped' | 'delivered';
+export type OrderPaymentMethod = 'cash' | 'card';
+
 export interface IOrder {
+    _id?: string;
+    status?: OrderStatus;
     items: {
         productId: string;
         name: string;
@@ -9,7 +14,13 @@ export interface IOrder {
     recipientName: string;
     recipientPhone: string;
     address: string;
-    paymentMethod: 'cash' | 'card';
+    paymentMethod: OrderPaymentMethod;
     paymentIntentId?: string; // Optional, only required for card payments
     totalPrice: number;
+}
+
+export interface IOrderDeleteFilter {
+    search?: string;
+    status?: OrderStatus;
+    paymentMethod?: OrderPaymentMethod;
 }

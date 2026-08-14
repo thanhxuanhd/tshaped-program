@@ -9,7 +9,7 @@ export class CartPage extends BasePage {
     private readonly cartItemRemoveButton = 'button.remove-btn';
 
     private readonly cartTotalLocator = this.page.locator('div.cart-total');
-    private readonly proceedCheckoutButtonLocator = this.page.getByTestId('proceed-checkout');
+    private readonly proceedCheckoutButtonLocator = this.page.locator('div.cart-summary button.checkout-btn');
 
     constructor(page: Page) {
         super(page);
@@ -24,9 +24,8 @@ export class CartPage extends BasePage {
     }
 
     async getProductQuantityByName(productName: string): Promise<string | null> {
-        const productItem = this.cartItemsLocator.filter({ hasText: productName });
-        const quantityInput = productItem.locator(this.cartItemQuantity);
-        return await quantityInput.inputValue();
+        const quantityInput = this.cartItemsLocator.filter({ hasText: productName }).locator(this.cartItemQuantity);
+        return await quantityInput.innerText();
     }
 
     async verifyProductInCart(productName: string): Promise<boolean> {
@@ -38,7 +37,7 @@ export class CartPage extends BasePage {
         const productItem = this.cartItemsLocator.filter({ hasText: productName });
         const name = await productItem.locator(this.cartItemName).textContent();
         const price = await productItem.locator(this.cartItemPrice).textContent();
-        const quantity = await productItem.locator(this.cartItemQuantity).inputValue();
+        const quantity = await productItem.locator(this.cartItemQuantity).textContent();
         
         return {
             name,

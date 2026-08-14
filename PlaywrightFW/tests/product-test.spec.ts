@@ -1,7 +1,8 @@
-import test from '../core/fixtures/all.fixture';
+import test, { expect } from '../core/fixtures/all.fixture';
 import { ReportUtils } from '../core';
 import * as allure from 'allure-js-commons';
 import accounts from '../resources/account.json';
+import { IProduct } from '../core/models';
 
 test.describe('Home Page Tests', () => {
     const account = accounts.find(acc => acc.role === 'customer') ?? { username: '', password: '' };
@@ -24,17 +25,17 @@ test.describe('Home Page Tests', () => {
 
     test.afterEach(async ({ prepareDataService }) => {
         await allure.step('Clean up cart via API', async () => {
-
             await prepareDataService.cleanupUserData();
         });
     });
 
-    test('Test 2: Add Single Product to Cart', async ({ homePage, cartPage, prepareDataService }) => {
+    test('Test 2: Add Single Product to Cart', { tag: '@mandatory' }, async ({ homePage, cartPage, prepareDataService }) => {
         const productName = 'Túi xách nữ';
+        let preparedProduct: IProduct | undefined;
 
         await allure.step('Prepare product data via API', async () => {
-            const preparedProduct = await prepareDataService.findProduct(productName);
-            test.expect(preparedProduct).toBeTruthy();
+            preparedProduct = await prepareDataService.findProduct(productName);
+            expect(preparedProduct).toBeTruthy();
         });
 
         await allure.step('Add single product to cart', async () => {
@@ -47,31 +48,31 @@ test.describe('Home Page Tests', () => {
 
         await allure.step('Verify product appears in cart', async () => {
             const isProductInCart = await cartPage.verifyProductInCart(productName);
-            test.expect(isProductInCart).toBe(true);
+            expect(isProductInCart).toBe(true);
         });
 
         await allure.step('Verify quantity is correct', async () => {
             const quantity = await cartPage.getProductQuantityByName(productName);
-            test.expect(quantity).toBe('1');
+            expect(quantity).toBe('1');
         });
 
 
         await allure.step('Verify cart page displays product details', async () => {
             await ReportUtils.attachScreenshot('Cart Page Screenshot', cartPage.page, async () => {
                 const productDetails = await cartPage.getProductDetails(productName);
-                test.expect(productDetails.name).toBeTruthy();
-                test.expect(productDetails.price).toBeTruthy();
-                test.expect(productDetails.quantity).toBe('1');
+                expect(productDetails.name).toBe(preparedProduct?.name);
+                expect(productDetails.price).toBe(preparedProduct?.price);
+                expect(productDetails.quantity).toBe('1');
             });
         });
     });
 
-    test('Test 5: Checkout with Valid Receiver Info (COD)', async ({ homePage, cartPage, checkoutPage, page }) => {
-        const productName = 'Túi xách nữ';
+    test('Test 5: Checkout with Valid Receiver Info (COD)', { tag: '@mandatory' }, async ({ homePage, cartPage, checkoutPage, page }) => {
+        const productName = 'Kính mát';
         const receiverInfo = {
             fullName: 'Nguyen Van B',
             phoneNumber: '0909123456',
-            address: '123 ABC Street, HCMC',
+            address: '123 ABC Street - HCM - Vietnam',
         };
 
         await allure.step('Add product to cart', async () => {
