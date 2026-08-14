@@ -1,0 +1,27 @@
+{
+  "name": "playwrightfw",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "test:chromium": "playwright test --project=chromium",
+    "allure:generate": "allure generate ./reports/allure-results --output ./reports/allure-report",
+    "allure:open": "allure open ./reports/allure-report",
+    "report": "npm run allure:generate && npm run allure:open"
+  },
+  "keywords": [],
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "^1.62.1",
+    "@types/node": "^26.2.0"
+  },
+  "dependencies": {
+    "@allurereport/plugin-awesome": "^3.14.3",
+    "allure": "^3.14.3",
+    "allure-playwright": "^3.10.2"
+  },
+  "allowScripts": {
+    "fsevents@2.3.2": true
+  }
+}

@@ -1,0 +1,6 @@
+export * from './base.page'
+export * from './home.page'
+export * from './login.page'
+export * from './profile.page'
+export * from './cart.page'
+export * from './checkout.page'
