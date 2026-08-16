@@ -1,12 +1,8 @@
 [
     {
-        "username": "admin",
-        "password": "admin123",
-        "role": "admin"
-    },
-    {
         "username": "customerx",
         "password": "Abc@12345",
-        "role": "customer"
+        "role": "customer",
+        "fullName": "Customer X"
     }
 ]

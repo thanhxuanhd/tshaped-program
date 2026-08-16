@@ -17,11 +17,13 @@ test.describe('Login Page Tests', () => {
 
     test('Test case 1: Verify login with empty credentials', { tag: '@mandatory' }, async ({ loginPage }) => {
         await allure.step('Login with empty credentials', async () => {
-            await loginPage.doLogin(account.username, account.password);
+            await ReportUtils.attachScreenshot('Should see that login page', loginPage.page, async () => {
+                await loginPage.doLogin(account.username, account.password);
+            });
         });
 
         await allure.step('Verify login errors', async () => {
-            await ReportUtils.attachScreenshot('Login Page Screenshot', loginPage.page, async () => {
+            await ReportUtils.attachScreenshot('Verify the error message', loginPage.page, async () => {
                 await loginPage.verifyErrorMessageShowAndText('Vui lòng nhập đầy đủ tài khoản và mật khẩu');
             });
         });
@@ -29,11 +31,13 @@ test.describe('Login Page Tests', () => {
 
     test('Verify login with invalid credentials', async ({ loginPage }) => {
         await allure.step('Login with invalid credentials', async () => {
-            await loginPage.doLogin('invalid', 'invalid');
+            await ReportUtils.attachScreenshot('Should see that login page', loginPage.page, async () => {
+                await loginPage.doLogin('invalid', 'invalid');
+            });
         });
 
         await allure.step('Verify login errors', async () => {
-            await ReportUtils.attachScreenshot('Login Page Screenshot', loginPage.page, async () => {
+            await ReportUtils.attachScreenshot('Verify the error message', loginPage.page, async () => {
                 await loginPage.verifyErrorMessageShowAndText('Tài khoản hoặc mật khẩu không đúng');
             });
         });

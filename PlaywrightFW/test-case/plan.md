@@ -223,3 +223,55 @@ Validate all tests run successfully and document implementation.
 - **Days 2-3**: Create missing page objects, set up hooks, finalize API helpers
 - **Days 3-4**: Write Test 2, Test 5, Test 6 specs with all fixtures and cleanup
 - **Days 4-5**: Validate locally, generate reports, run CI, document, review
+
+# Playwright Test Plan for Remaining Cases
+
+## Current status
+Test cases 1, 2, 5, and 6 are already complete. The remaining work is limited to the unresolved scenarios from the original list:
+- Test 3: Add the same product twice - quantity increases correctly
+- Test 4: Remove items from cart - one item and multiple items
+- Test 7: Advanced - Verify order pages (seed the order via API)
+
+This update focuses only on the remaining plan items. No code changes are required in this step.
+
+## Goal
+Complete the remaining Playwright test coverage using the existing framework patterns: TDD, page object model, hooks, API-driven setup/cleanup, and independent test execution.
+
+## Scope
+- Reuse current fixtures, page objects, and helper structure already established for completed tests.
+- Add or complete only the missing test logic for the remaining cases.
+- Keep each test isolated and runnable by itself without depending on previous test state.
+
+## Implementation tasks
+1. Review the current cart and order fixture coverage to confirm what remains missing for Test 3 and Test 4.
+2. Confirm the API helper strategy needed for Test 7 to seed and verify order-page state.
+3. Implement Test 3
+   - Add the same product twice from the product page or catalog
+   - Assert the quantity increments appropriately in the cart
+   - Validate the cart summary/state matches expected behavior
+4. Implement Test 4
+   - Remove a single product from the cart and verify the item disappears
+   - Remove multiple products and verify the cart updates correctly
+   - Validate empty-state or recalculated totals if applicable
+5. Implement Test 7
+   - Seed an order through API
+   - Navigate to the relevant order page(s)
+   - Verify the order details and status appear as expected
+   - Clean up the seeded data using API cleanup where needed
+6. Validate independence and cleanup
+   - Run the remaining cases individually and together
+   - Confirm no cross-test data leakage
+   - Verify API cleanup resets cart/order/user state as expected
+
+## Notes
+- Keep the same test conventions already used by the completed cases.
+- Prefer the existing POM and fixture pattern rather than introducing new framework patterns.
+- Use API setup/cleanup for stateful scenarios, especially cart/order validation.
+- No broad refactor is needed; this is a targeted completion of the remaining test cases only.
+
+## Completion criteria
+The plan is complete when:
+- Test 3 has explicit duplicate-add quantity validation
+- Test 4 covers single-item and multi-item removal flows
+- Test 7 seeds data via API and verifies order pages successfully
+- The remaining tests pass independently and leave no leftover state behind

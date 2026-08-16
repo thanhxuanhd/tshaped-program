@@ -24,3 +24,10 @@ export interface IOrderDeleteFilter {
     status?: OrderStatus;
     paymentMethod?: OrderPaymentMethod;
 }
+
+export interface OrderDetails {
+    recipientName: string;
+    address: string;
+    status?: string;
+    totalPrice: number;
+}

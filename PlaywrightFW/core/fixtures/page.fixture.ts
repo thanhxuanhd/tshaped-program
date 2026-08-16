@@ -1,4 +1,4 @@
-import { BasePage, HomePage, LoginPage, ProfilePage, CartPage, CheckoutPage } from '../../page-objects'
+import { BasePage, HomePage, LoginPage, ProfilePage, CartPage, CheckoutPage, OrderPage } from '../../page-objects'
 import { type test as base } from '@playwright/test'
 import { PrepareDataService } from '../services';
 
@@ -9,6 +9,7 @@ export type PageFixtures = {
     profilePage: ProfilePage,
     cartPage: CartPage,
     checkoutPage: CheckoutPage,
+    orderPage: OrderPage,
     prepareDataService: PrepareDataService
 }
 
@@ -17,7 +18,7 @@ type ExtendParams = Parameters<typeof base.extend<PageFixtures>>;
 export const pageFixtures: ExtendParams[0] = {
     page: async ({ page }, use) => {
         await page.addInitScript(() => {
-            window.localStorage.setItem('shopvn_lage', 'en');
+            window.localStorage.setItem('shopvn_lang', 'en');
         });
         await use(page);
     },
@@ -38,6 +39,9 @@ export const pageFixtures: ExtendParams[0] = {
     },
     checkoutPage: async ({ page }, use) => {
         await use(new CheckoutPage(page));
+    },
+    orderPage: async ({ page }, use) => {
+        await use(new OrderPage(page));
     },
     prepareDataService: async ({ request }, use) => {
         await use(new PrepareDataService(request));
