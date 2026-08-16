@@ -66,6 +66,10 @@ test.describe('Order Page Tests', () => {
             });
         });
 
+        await allure.step('Wait for loading order state to complete', async () => {
+            await orderPage.waitingForLoadingOrderStateCompleted();
+        });
+
         await allure.step('Verify order detail information', async () => {
             await ReportUtils.attachScreenshot('Should see the Order Detail Page with correct data', page, async () => {
                 await orderPage.verifyOrderDetails({

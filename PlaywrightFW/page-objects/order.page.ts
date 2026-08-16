@@ -9,6 +9,7 @@ export class OrderPage extends BasePage {
     private readonly orderStatus = 'div.order-card-header-right span.order-status';
     private readonly orderRecipient = 'div.order-recipient span';
     private readonly orderTotalPrice = 'div.order-footer-right span.order-total';
+    private readonly orderStateLocator = this.page.locator('main.orders-main p.orders-state');
 
     constructor(page: Page) {
         super(page);
@@ -29,6 +30,10 @@ export class OrderPage extends BasePage {
     async verifyOrderExists(recipientName: string): Promise<boolean> {
         const order = this.ordersListLocator.filter({ hasText: recipientName });
         return (await order.count()) > 0;
+    }
+
+    async waitingForLoadingOrderStateCompleted() {
+        await this.awaitUntilHidden(this.orderStateLocator, 2000, 'Loading order state should be completed');
     }
 
     async verifyOrderDetails({ recipientName, address, status = 'pending', totalPrice }: OrderDetails) {
