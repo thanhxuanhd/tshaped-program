@@ -15,7 +15,7 @@ test.describe('Login Page Tests', () => {
         });
     });
 
-    test('Test case 1: Verify login with empty credentials', { tag: '@mandatory' }, async ({ loginPage }) => {
+    test('Test 1: Verify login with empty credentials', { tag: '@mandatory' }, async ({ loginPage }) => {
         await allure.step('Login with empty credentials', async () => {
             await ReportUtils.attachScreenshot('Should see that login page', loginPage.page, async () => {
                 await loginPage.doLogin(account.username, account.password);
@@ -27,9 +27,9 @@ test.describe('Login Page Tests', () => {
                 await loginPage.verifyErrorMessageShowAndText('Vui lòng nhập đầy đủ tài khoản và mật khẩu');
             });
         });
-    });
+    }); 
 
-    test('Verify login with invalid credentials', async ({ loginPage }) => {
+    test('Test Verify login with invalid credentials', async ({ loginPage }) => {
         await allure.step('Login with invalid credentials', async () => {
             await ReportUtils.attachScreenshot('Should see that login page', loginPage.page, async () => {
                 await loginPage.doLogin('invalid', 'invalid');

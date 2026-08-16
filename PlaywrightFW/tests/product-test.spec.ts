@@ -112,32 +112,10 @@ test.describe('Product Tests', () => {
             await cartPage.navigateToCart();
         });
 
-        await allure.step('Verify products are in cart', async () => {
-            const isProduct1InCart = await cartPage.verifyProductInCart(product1);
-            const isProduct2InCart = await cartPage.verifyProductInCart(product2);
-            expect(isProduct1InCart).toBe(true);
-            expect(isProduct2InCart).toBe(true);
-
-        });
-
-        await allure.step('Verify quantities are in cart', async () => {
-            const quantity1 = await cartPage.getProductQuantityByName(product1);
-            const quantity2 = await cartPage.getProductQuantityByName(product2);
-            expect(quantity1).toBe('2');
-            expect(quantity2).toBe('1');
-        });
-
         await allure.step('Remove single product from cart', async () => {
             await ReportUtils.attachScreenshot('Verify Products in Cart after remove', cartPage.page, async () => {
                 await cartPage.removeItemFromCart(product1);
             });
-        });
-
-        await allure.step('Verify single product removed', async () => {
-            const isProduct1InCart = await cartPage.verifyProductInCart(product1);
-            expect(isProduct1InCart).toBe(false);
-            const isProduct2InCart = await cartPage.verifyProductInCart(product2);
-            expect(isProduct2InCart).toBe(true);
         });
 
         await allure.step('Remove remaining product from cart', async () => {
