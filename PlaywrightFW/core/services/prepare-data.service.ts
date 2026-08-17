@@ -29,6 +29,7 @@ export class PrepareDataService {
     async prepareUserData(username: string, password: string): Promise<void> {
         const loginResponse = await this.login(username, password);
         this.apiToken = loginResponse.token;
+        await this.cleanupCart([]);
     }
 
     private getAuthHeaders(): Record<string, string> {
