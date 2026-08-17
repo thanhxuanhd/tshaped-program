@@ -4,7 +4,6 @@ import { BasePage } from "./base.page";
 
 export class CartPage extends BasePage {
     private readonly cartItemsLocator = this.page.locator('div.cart-item');
-    private readonly cartItemEmptyShopBtnLocator = this.page.locator('div.cart-empty button.shop-btn');
     private readonly cartItemName = 'div.item-info h3';
     private readonly cartItemPrice = 'div.item-total';
     private readonly cartItemQuantity = 'div.item-qty span.qty-value';
@@ -77,10 +76,10 @@ export class CartPage extends BasePage {
     }
 
     async isCartEmpty(): Promise<boolean> {
-        return await this.cartItemEmptyShopBtnLocator.isVisible();
+        return (await this.cartItemsLocator.count()) === 0;
     }
 
     async waitForCartEmpty() {
-        await expect(this.cartItemEmptyShopBtnLocator).toBeVisible();
+        await expect(this.cartItemsLocator).toHaveCount(0);
     }
 }
