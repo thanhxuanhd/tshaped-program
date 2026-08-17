@@ -1,6 +1,7 @@
 import { API_ENDPOINTS, ApiHelper } from "../api";
 import type {
-    ICartItem, ILoginResponse,
+    ICartItem,
+    ILoginResponse,
     IOrder,
     IOrderDeleteFilter,
     IProduct
@@ -20,7 +21,7 @@ export class PrepareDataService {
             data: { username, password },
             headers: {
                 'Content-Type': 'application/json',
-            }
+            },
         });
         return response.json();
     }
@@ -30,13 +31,21 @@ export class PrepareDataService {
         this.apiToken = loginResponse.token;
     }
 
+    private getAuthHeaders(): Record<string, string> {
+        if (!this.apiToken) {
+            throw new Error('API token is missing. Call prepareUserData() before using authenticated requests.');
+        }
+
+        return {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + this.apiToken,
+        };
+    }
+
     async createOrder(orderData: IOrder): Promise<any> {
         const response = await this.apiHelper.post(API_ENDPOINTS.ORDERS, {
             data: orderData,
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${this.apiToken}`,
-            }
+            headers: this.getAuthHeaders(),
         });
         return response.json();
     }
@@ -48,20 +57,14 @@ export class PrepareDataService {
                 ...(filter.status && { status: filter.status }),
                 ...(filter.paymentMethod && { paymentMethod: filter.paymentMethod }),
             },
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${this.apiToken}`,
-            }
+            headers: this.getAuthHeaders(),
         });
         return response.json();
     }
 
     async getProducts(): Promise<IProduct[]> {
         const response = await this.apiHelper.get(`${API_ENDPOINTS.PRODUCTS}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${this.apiToken}`,
-            }
+            headers: this.getAuthHeaders(),
         });
         return response.json();
     }
@@ -95,10 +98,7 @@ export class PrepareDataService {
     async updateUserFullName(newFullName: string): Promise<any> {
         const response = await this.apiHelper.patch(`${API_ENDPOINTS.PROFILE}`, {
             data: { name: newFullName },
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${this.apiToken}`,
-            }
+            headers: this.getAuthHeaders(),
         });
         return response.json();
     }
@@ -106,10 +106,7 @@ export class PrepareDataService {
     async cleanupCart(items: ICartItem[]): Promise<any> {
         const response = await this.apiHelper.put(API_ENDPOINTS.CART, {
             data: { items },
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${this.apiToken}`,
-            }
+            headers: this.getAuthHeaders(),
         });
         return response.json();
     }

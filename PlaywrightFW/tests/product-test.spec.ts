@@ -2,6 +2,7 @@ import test, { expect } from '../core/fixtures/all.fixture';
 import { ReportUtils, CurrencyUtils } from '../core';
 import * as allure from 'allure-js-commons';
 import accounts from '../resources/account.json';
+import testData from '../resources/test-data.json';
 import { IProduct } from '../core/models';
 
 test.describe('Product Tests', () => {
@@ -55,7 +56,7 @@ test.describe('Product Tests', () => {
                 const formattedPrice = CurrencyUtils.formatCurrency(preparedProduct?.price ?? 0);
                 expect(productDetails.name).toBe(preparedProduct?.name);
                 expect(productDetails.price).toBe(formattedPrice);
-                expect(productDetails.quantity).toBe('1');
+                expect(productDetails.quantity).toBe(testData.product.singleAddExpectedQuantity);
             });
         });
     });
@@ -85,7 +86,7 @@ test.describe('Product Tests', () => {
             await ReportUtils.attachScreenshot('Cart with Duplicate Product Screenshot', cartPage.page, async () => {
                 const productDetails = await cartPage.getProductDetails(productName);
                 expect(productDetails.name).toBe(preparedProduct?.name);
-                expect(productDetails.quantity).toBe('2');
+                expect(productDetails.quantity).toBe(testData.product.duplicateAddExpectedQuantity);
             });
         });
     });
@@ -95,7 +96,7 @@ test.describe('Product Tests', () => {
         let product2: string;
 
         await allure.step('Prepare product data via API', async () => {
-            const [preparedProduct1, preparedProduct2] = await prepareDataService.getRandomProducts(2);
+            const [preparedProduct1, preparedProduct2] = await prepareDataService.getRandomProducts(testData.product.removeItemsInitialQuantity);
             product1 = preparedProduct1.name;
             product2 = preparedProduct2.name;
         });
@@ -134,11 +135,7 @@ test.describe('Product Tests', () => {
 
     test('Test 5: Checkout with Valid Receiver Info (COD)', { tag: '@mandatory' }, async ({ homePage, cartPage, checkoutPage, page, prepareDataService }) => {
         let productName: string;
-        const receiverInfo = {
-            fullName: 'Nguyen Van B',
-            phoneNumber: '0909123456',
-            address: '123 ABC Street - HCM - Vietnam',
-        };
+        const receiverInfo = testData.checkout.receiverInfo;
 
         await allure.step('Prepare product data via API', async () => {
             const [preparedProduct] = await prepareDataService.getRandomProducts(1);

@@ -1,0 +1,26 @@
+{
+    "product": {
+        "singleAddExpectedQuantity": "1",
+        "duplicateAddExpectedQuantity": "2",
+        "removeItemsInitialQuantity": 2
+    },
+    "checkout": {
+        "receiverInfo": {
+            "fullName": "Nguyen Van B",
+            "phoneNumber": "0909123456",
+            "address": "123 ABC Street - HCM - Vietnam"
+        }
+    },
+    "profile": {
+        "updatedFullName": "Customer X Updated"
+    },
+    "order": {
+        "recipientName": "Test Recipient Order",
+        "recipientPhone": "0987654321",
+        "address": "Test Address - HCM - Vietnam",
+        "quantity": 2,
+        "paymentMethod": "cash",
+        "status": "confirmed",
+        "expectedStatus": "Confirmed"
+    }
+}

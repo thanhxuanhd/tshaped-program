@@ -2,15 +2,28 @@ import test from '../core/fixtures/all.fixture';
 import { ReportUtils } from '../core';
 import * as allure from 'allure-js-commons';
 import accounts from '../resources/account.json';
-import { IOrder, IProduct } from '../core/models';
+import testData from '../resources/test-data.json';
+import type { IOrder, IProduct, OrderPaymentMethod, OrderStatus } from '../core/models';
 
 test.describe('Order Page Tests', () => {
     const account = accounts.find(acc => acc.role === 'customer') ?? { username: '', password: '', fullName: '' };
 
     let preparedProduct: IProduct | undefined;
-    const recipientName = 'Test Recipient Order';
-    const recipientPhone = '0987654321';
-    const address = 'Test Address - HCM - Vietnam';
+    const orderData = testData.order as {
+        recipientName: string;
+        recipientPhone: string;
+        address: string;
+        quantity: number;
+        paymentMethod: OrderPaymentMethod;
+        status: OrderStatus;
+        expectedStatus: string;
+    };
+    const { recipientName,
+            recipientPhone, address,
+            quantity, paymentMethod,
+            status,
+            expectedStatus
+        } = orderData;
     let order: IOrder;
 
     test.beforeEach(async ({ loginPage, prepareDataService }) => {
@@ -35,15 +48,15 @@ test.describe('Order Page Tests', () => {
                     productId: preparedProduct?._id || '',
                     name: preparedProduct?.name || 'Túi xách nữ',
                     price: preparedProduct?.price || 0,
-                    quantity: 2,
+                    quantity,
                     emoji: preparedProduct?.emoji || '👜',
                 }],
                 recipientName: recipientName,
                 recipientPhone: recipientPhone,
                 address: address,
-                paymentMethod: 'cash',
-                totalPrice: (preparedProduct?.price || 0) * 2,
-                status: 'confirmed',
+                paymentMethod,
+                totalPrice: (preparedProduct?.price || 0) * quantity,
+                status,
             }
         });
 
@@ -75,7 +88,7 @@ test.describe('Order Page Tests', () => {
                 await orderPage.verifyOrderDetails({
                     recipientName,
                     address,
-                    status: 'Confirmed',
+                    status: expectedStatus,
                     totalPrice: order.totalPrice,
                 });
             });

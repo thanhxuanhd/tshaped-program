@@ -2,6 +2,7 @@ import test from '../core/fixtures/all.fixture';
 import { ReportUtils } from '../core';
 import * as allure from 'allure-js-commons';
 import accounts from '../resources/account.json';
+import testData from '../resources/test-data.json';
 
 test.describe('Profile Page Tests', () => {
     const account = accounts.find(acc => acc.role === 'customer') ?? { username: '', password: '', fullName: '' };
@@ -27,7 +28,7 @@ test.describe('Profile Page Tests', () => {
     });
 
     test('Test 6: Update Full Name Then Clean Up via API', { tag: '@mandatory' }, async ({ profilePage, page }) => {
-        const updatedFullName = 'Customer X Updated';
+        const updatedFullName = testData.profile.updatedFullName;
 
         await allure.step('Navigate to profile page', async () => {
             await ReportUtils.attachScreenshot('Should see the Profile Page', page, async () => {
