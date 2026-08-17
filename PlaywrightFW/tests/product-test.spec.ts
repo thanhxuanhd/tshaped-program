@@ -120,7 +120,7 @@ test.describe('Product Tests', () => {
         });
 
         await allure.step('Verify both products are in the cart before removal', async () => {
-            expect(await cartPage.getCartItemCount()).toBe(testData.product.removeItemsInitialQuantity);
+            await cartPage.waitForCartItemCount(testData.product.removeItemsInitialQuantity);
         });
 
         await allure.step('Remove single product from cart', async () => {
@@ -130,8 +130,9 @@ test.describe('Product Tests', () => {
         });
 
         await allure.step('Verify cart still has the remaining product', async () => {
-            expect(await cartPage.getCartItemCount()).toBe(1);
-            expect(await cartPage.verifyProductInCart(product2)).toBe(true);
+            await cartPage.waitForCartItemCount(1);
+            await cartPage.waitForProductInCart(product2);
+            await cartPage.waitForProductNotInCart(product1);
         });
 
         await allure.step('Remove remaining product from cart', async () => {
@@ -142,8 +143,7 @@ test.describe('Product Tests', () => {
 
         await allure.step('Verify empty cart state', async () => {
             await ReportUtils.attachScreenshot('Empty Cart Screenshot', cartPage.page, async () => {
-                const isCartEmpty = await cartPage.isCartEmpty();
-                expect(isCartEmpty).toBe(true);
+                await cartPage.waitForCartEmpty();
             });
         });
     });

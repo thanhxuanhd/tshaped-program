@@ -1,4 +1,5 @@
 import { type Page } from "@playwright/test";
+import { expect } from "@playwright/test";
 import { BasePage } from "./base.page";
 
 export class CartPage extends BasePage {
@@ -24,6 +25,10 @@ export class CartPage extends BasePage {
         return await this.countElements(this.cartItemsLocator);
     }
 
+    async waitForCartItemCount(expectedCount: number) {
+        await expect(this.cartItemsLocator).toHaveCount(expectedCount);
+    }
+
     async getProductQuantityByName(productName: string): Promise<string | null> {
         const quantityInput = this.cartItemsLocator.filter({ hasText: productName }).locator(this.cartItemQuantity);
         return await quantityInput.innerText();
@@ -32,6 +37,16 @@ export class CartPage extends BasePage {
     async verifyProductInCart(productName: string): Promise<boolean> {
         const productItem = this.cartItemsLocator.filter({ hasText: productName });
         return (await productItem.count()) > 0;
+    }
+
+    async waitForProductInCart(productName: string) {
+        const productItem = this.cartItemsLocator.filter({ hasText: productName });
+        await expect(productItem).toHaveCount(1);
+    }
+
+    async waitForProductNotInCart(productName: string) {
+        const productItem = this.cartItemsLocator.filter({ hasText: productName });
+        await expect(productItem).toHaveCount(0);
     }
 
     async getProductDetails(productName: string) {
@@ -63,5 +78,9 @@ export class CartPage extends BasePage {
 
     async isCartEmpty(): Promise<boolean> {
         return await this.cartItemEmptyShopBtnLocator.isVisible();
+    }
+
+    async waitForCartEmpty() {
+        await expect(this.cartItemEmptyShopBtnLocator).toBeVisible();
     }
 }
