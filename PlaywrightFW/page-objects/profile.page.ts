@@ -18,6 +18,10 @@ export class ProfilePage extends BasePage {
         await this.enterText(this.fullNameInput, fullName);
     }
 
+    async getFullName(): Promise<string> {
+        return await this.fullNameInput.inputValue();
+    }
+
     async saveChanges() {
         await this.clickOnElement(this.saveChangesButton);
     }

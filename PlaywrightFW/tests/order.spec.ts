@@ -1,4 +1,4 @@
-import test from '../core/fixtures/all.fixture';
+import test, { expect } from '../core/fixtures/all.fixture';
 import { ReportUtils } from '../core';
 import * as allure from 'allure-js-commons';
 import accounts from '../resources/account.json';
@@ -81,6 +81,11 @@ test.describe('Order Page Tests', () => {
 
         await allure.step('Wait for loading order state to complete', async () => {
             await orderPage.waitingForLoadingOrderStateCompleted();
+        });
+
+        await allure.step('Verify order card exists in the list', async () => {
+            expect(await orderPage.verifyOrderExists(recipientName)).toBe(true);
+            expect(await orderPage.getOrderCount()).toBeGreaterThan(0);
         });
 
         await allure.step('Verify order detail information', async () => {

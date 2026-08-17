@@ -48,15 +48,18 @@ test.describe('Product Tests', () => {
         await allure.step('Verify product appears in cart', async () => {
             const isProductInCart = await cartPage.verifyProductInCart(productName);
             expect(isProductInCart).toBe(true);
+            expect(await cartPage.getCartItemCount()).toBe(1);
         });
 
         await allure.step('Verify cart page displays product details', async () => {
             await ReportUtils.attachScreenshot('Cart Page Screenshot', cartPage.page, async () => {
                 const productDetails = await cartPage.getProductDetails(productName);
                 const formattedPrice = CurrencyUtils.formatCurrency(preparedProduct?.price ?? 0);
+                const cartTotalItems = await cartPage.getCartTotal();
                 expect(productDetails.name).toBe(preparedProduct?.name);
                 expect(productDetails.price).toBe(formattedPrice);
                 expect(productDetails.quantity).toBe(testData.product.singleAddExpectedQuantity);
+                expect(cartTotalItems.some(item => item.includes(formattedPrice))).toBe(true);
             });
         });
     });
@@ -85,8 +88,11 @@ test.describe('Product Tests', () => {
         await allure.step('Verify cart displays correct product details', async () => {
             await ReportUtils.attachScreenshot('Cart with Duplicate Product Screenshot', cartPage.page, async () => {
                 const productDetails = await cartPage.getProductDetails(productName);
+                const expectedTotal = CurrencyUtils.formatCurrency((preparedProduct?.price ?? 0) * Number(testData.product.duplicateAddExpectedQuantity));
+                const cartTotalItems = await cartPage.getCartTotal();
                 expect(productDetails.name).toBe(preparedProduct?.name);
                 expect(productDetails.quantity).toBe(testData.product.duplicateAddExpectedQuantity);
+                expect(cartTotalItems.some(item => item.includes(expectedTotal))).toBe(true);
             });
         });
     });
@@ -113,10 +119,19 @@ test.describe('Product Tests', () => {
             await cartPage.navigateToCart();
         });
 
+        await allure.step('Verify both products are in the cart before removal', async () => {
+            expect(await cartPage.getCartItemCount()).toBe(testData.product.removeItemsInitialQuantity);
+        });
+
         await allure.step('Remove single product from cart', async () => {
             await ReportUtils.attachScreenshot('Verify Products in Cart after remove', cartPage.page, async () => {
                 await cartPage.removeItemFromCart(product1);
             });
+        });
+
+        await allure.step('Verify cart still has the remaining product', async () => {
+            expect(await cartPage.getCartItemCount()).toBe(1);
+            expect(await cartPage.verifyProductInCart(product2)).toBe(true);
         });
 
         await allure.step('Remove remaining product from cart', async () => {
@@ -168,8 +183,20 @@ test.describe('Product Tests', () => {
             });
         });
 
+        await allure.step('Verify receiver information is populated', async () => {
+            await checkoutPage.verifyReceiverInformation(
+                receiverInfo.fullName,
+                receiverInfo.phoneNumber,
+                receiverInfo.address,
+            );
+        });
+
         await allure.step('Select COD payment method', async () => {
             await checkoutPage.selectCodPaymentMethod();
+        });
+
+        await allure.step('Verify COD payment method is selected', async () => {
+            await checkoutPage.verifyCodPaymentMethodSelected();
         });
 
         await allure.step('Place order', async () => {

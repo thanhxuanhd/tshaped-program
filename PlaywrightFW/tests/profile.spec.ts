@@ -1,4 +1,4 @@
-import test from '../core/fixtures/all.fixture';
+import test, { expect } from '../core/fixtures/all.fixture';
 import { ReportUtils } from '../core';
 import * as allure from 'allure-js-commons';
 import accounts from '../resources/account.json';
@@ -48,6 +48,11 @@ test.describe('Profile Page Tests', () => {
             await ReportUtils.attachScreenshot('Profile Update Success Screenshot', page, async () => {
                 await profilePage.verifyProfileUpdated(updatedFullName);
             });
+        });
+
+        await allure.step('Verify updated full name persists after reload', async () => {
+            await profilePage.openProfilePage();
+            expect(await profilePage.getFullName()).toBe(updatedFullName);
         });
     });
 });

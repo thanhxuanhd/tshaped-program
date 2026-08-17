@@ -9,7 +9,7 @@ export class CartPage extends BasePage {
     private readonly cartItemQuantity = 'div.item-qty span.qty-value';
     private readonly cartItemRemoveButton = 'button.remove-btn';
 
-    private readonly cartTotalLocator = this.page.locator('div.cart-total');
+    private readonly cartTotalLocator = this.page.locator('div.summary-total span');
     private readonly proceedCheckoutButtonLocator = this.page.locator('div.cart-summary button.checkout-btn');
 
     constructor(page: Page) {
@@ -57,8 +57,8 @@ export class CartPage extends BasePage {
         await this.clickOnElement(this.proceedCheckoutButtonLocator);
     }
 
-    async getCartTotal(): Promise<string | null> {
-        return await this.getTextContent(this.cartTotalLocator);
+    async getCartTotal(): Promise<string[]> {
+        return await this.cartTotalLocator.allInnerTexts();
     }
 
     async isCartEmpty(): Promise<boolean> {
