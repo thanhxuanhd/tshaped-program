@@ -31,3 +31,10 @@ This project is a pet project to practice Playwright automation testing.
 * Generate the Allure report: `npx allure generate ./reports/allure-results -o ./reports/allure-report`
 * Open the Allure report: `npx allure open ./reports/allure-report`
 * Open the Playwright HTML report: `npx playwright show-report ./reports/playwright-report`
+
+## GitHub Actions Pipeline
+The project includes a GitHub Actions workflow (`.github/workflows/playwright.yml`) that automatically runs tests on every push and pull request to the `main` or `master` branches. The pipeline:
+* Runs tests in parallel using **2 workers** by default for faster execution
+* Generates both Playwright and Allure reports
+* Uploads test reports as artifacts for review
+* Can be manually triggered with custom parameters (e.g., specific test tags or custom worker count)
