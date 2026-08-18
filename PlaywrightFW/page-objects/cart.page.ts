@@ -65,6 +65,7 @@ export class CartPage extends BasePage {
         const productItem = this.cartItemsLocator.filter({ hasText: productName });
         const removeButton = productItem.locator(this.cartItemRemoveButton);
         await this.clickOnElement(removeButton);
+        await expect(productItem).toHaveCount(0);
     }
 
     async proceedToCheckout() {
