@@ -11,7 +11,7 @@ on:
         required: false
         default: ''
       workers:
-        description: 'Number of parallel workers (overrides playwright.config.ts CI default of 1)'
+        description: 'Number of parallel workers (overrides playwright.config.ts CI default of 2)'
         required: false
         default: ''
 jobs:
